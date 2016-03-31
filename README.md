@@ -17,7 +17,7 @@ var modelColors = new Model();
 
 //add change listener
 modelColors.on('change', function(data) {
-    window.console.log('CHANGE CALLED', data);
+    window.console.log('Data Change:', data);
 );
 
 // add data
