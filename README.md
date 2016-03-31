@@ -25,6 +25,7 @@ var redColorID = modelColors.set({'color':'red'});
 
 // get data
 var redColorData = modelColors.get(redColorID);
+window.console.log(redColorData);
 
 // update data
 modelColors.update(redColorID, {'color':'green'});
