@@ -18,7 +18,7 @@ var modelColors = new Model();
 //add change listener
 modelColors.on('change', function(data) {
     window.console.log('Data Change:', data);
-);
+});
 
 // add data
 var redColorID = modelColors.set({'color':'red'});
