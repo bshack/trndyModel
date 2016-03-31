@@ -1,5 +1,7 @@
 # trndyModel
 
+simple js data model that emits events on data change
+
 ## install
 
 ```
