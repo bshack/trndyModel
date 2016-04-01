@@ -24,6 +24,13 @@ var Model = require('trndymodel').Model;
 var modelColor = new Model();
 
 
+// optionally you can also set the model data at instantiation
+
+var modelColor = new Model({
+    name: 'red'
+});
+
+
 //add change listener to the model
 
 modelColor.on('change', function(data) {
@@ -124,6 +131,7 @@ modelColor3.set({
 modelColors.set(modelColor1);
 modelColors.set(modelColor2);
 modelColors.set(modelColor3);
+
 
 // get all models in the collection
 // returns array

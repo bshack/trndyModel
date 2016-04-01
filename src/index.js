@@ -5,18 +5,15 @@ import _ from 'lodash';
 (function(EventEmitter, util, _) {
 
     'use strict';
-    
+
     /*
     MODEL
     */
 
-    const Model = function(settings) {
-
-        // a place to hold some settings
-        this.settings = settings || {};
+    const Model = function(modelData) {
 
         // where the data is held for the model
-        this.modelData = {};
+        this.modelData = modelData || {};
 
         // this is called whenever the model is instantiated
         this.initialize = () => {};
@@ -62,13 +59,10 @@ import _ from 'lodash';
     COLLECTION
     */
 
-    const Collection = function(settings) {
-
-        // a place to hold some settings
-        this.settings = settings || {};
+    const Collection = function(collectionData) {
 
         // where the data is held for the model
-        this.collectionData = [];
+        this.collectionData = collectionData || [];
 
         // this is called whenever the model is instantiated
         this.initialize = () => {};

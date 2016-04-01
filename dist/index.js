@@ -33,14 +33,11 @@
         MODEL
         */
 
-        var Model = function Model(settings) {
+        var Model = function Model(modelData) {
             var _this = this;
 
-            // a place to hold some settings
-            this.settings = settings || {};
-
             // where the data is held for the model
-            this.modelData = {};
+            this.modelData = modelData || {};
 
             // this is called whenever the model is instantiated
             this.initialize = function () {};
@@ -84,14 +81,11 @@
         COLLECTION
         */
 
-        var Collection = function Collection(settings) {
+        var Collection = function Collection(collectionData) {
             var _this2 = this;
 
-            // a place to hold some settings
-            this.settings = settings || {};
-
             // where the data is held for the model
-            this.collectionData = [];
+            this.collectionData = collectionData || [];
 
             // this is called whenever the model is instantiated
             this.initialize = function () {};
