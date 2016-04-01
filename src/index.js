@@ -5,6 +5,10 @@ import _ from 'lodash';
 (function(EventEmitter, util, _) {
 
     'use strict';
+    
+    /*
+    MODEL
+    */
 
     const Model = function(settings) {
 
@@ -12,69 +16,128 @@ import _ from 'lodash';
         this.settings = settings || {};
 
         // where the data is held for the model
-        this.data = {};
+        this.modelData = {};
 
         // this is called whenever the model is instantiated
-        this.init = () => {};
+        this.initialize = () => {};
 
         // the setter
         this.set = data => {
-            //makeup a unqiue id
-            const id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-            this.data[id] = data;
+            this.modelData = data;
             this.emit('change', this.get());
-            return id;
+            return true;
         };
 
         // the getter
-        this.get = id => {
-            if (id) {
-                return this.data[id];
-            } else {
-                //clean up protoype
-                let name;
-                const cleanData = {};
-                for (name in this.data) {
-                    if (this.data.hasOwnProperty(name)) {
-                        cleanData[name] = this.data[name];
-                    }
-                }
-                return cleanData;
-            }
+        this.get = () => {
+            return this.modelData;
         };
 
         // the updater
-        this.update = (id, updateData) => {
-            if (id && updateData && this.data[id]) {
-                this.data[id] = _.extend({}, this.data[id], updateData);
-                this.emit('change', this.get());
-                return this.get(id);
-            } else {
-                return;
-            }
-        };
+        this.update = (updateData) => {
 
-        // the deleter
-        this.delete = id => {
-            if (id) {
-                delete this.data[id];
+            if (updateData) {
+                this.modelData = _.extend(this.modelData, updateData);
                 this.emit('change', this.get());
                 return true;
             } else {
-                this.data = {};
-                this.emit('change', this.get());
-                return this.get();
+                return false;
             }
+
+        };
+
+        // the deleter
+        this.delete = () => {
+            this.modelData = {};
+            this.emit('change', this.get());
+            return true;
         };
 
         // run it on instantiation
-        this.init();
+        this.initialize();
+
+    };
+
+    /*
+    COLLECTION
+    */
+
+    const Collection = function(settings) {
+
+        // a place to hold some settings
+        this.settings = settings || {};
+
+        // where the data is held for the model
+        this.collectionData = [];
+
+        // this is called whenever the model is instantiated
+        this.initialize = () => {};
+
+        // the setter
+        this.set = data => {
+
+            if (data) {
+                this.collectionData.push(data);
+                this.emit('change', this.get());
+                return true;
+            } else {
+                return false;
+            }
+
+        };
+
+        // the getter
+        this.get = index => {
+
+            if (!isNaN(index)) {
+                return this.collectionData[index];
+            } else {
+                return this.collectionData;
+            }
+
+        };
+
+        // the updater
+        this.update = (index, updateData) => {
+
+            if (!isNaN(index) && updateData && this.collectionData[index] && this.collectionData[index].modelData) {
+                this.collectionData[index].modelData =
+                    _.extend(this.collectionData[index].modelData, updateData);
+                this.emit('change', this.get());
+                return true;
+            } else {
+                return false;
+            }
+
+        };
+
+        // the deleter
+        this.delete = index => {
+
+            if (!isNaN(index) && this.collectionData[index] && this.collectionData[index].modelData) {
+                delete this.collectionData[index];
+                this.emit('change', this.get());
+                return true;
+            } else {
+                this.collectionData = [];
+                this.emit('change', this.get());
+                return true;
+            }
+
+        };
+
+        // run it on instantiation
+        this.initialize();
 
     };
 
     // this sets up the events
     util.inherits(Model, EventEmitter);
+    util.inherits(Collection, EventEmitter);
 
-    module.exports = Model;
+    module.exports = {
+        Model: Model,
+        Collection: Collection
+    };
 
 })(EventEmitter, util, _);

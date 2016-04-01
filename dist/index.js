@@ -29,6 +29,10 @@
 
         'use strict';
 
+        /*
+        MODEL
+        */
+
         var Model = function Model(settings) {
             var _this = this;
 
@@ -36,68 +40,121 @@
             this.settings = settings || {};
 
             // where the data is held for the model
-            this.data = {};
+            this.modelData = {};
 
             // this is called whenever the model is instantiated
-            this.init = function () {};
+            this.initialize = function () {};
 
             // the setter
             this.set = function (data) {
-                //makeup a unqiue id
-                var id = (+new Date() + Math.floor(Math.random() * 999999)).toString(36);
-                _this.data[id] = data;
+                _this.modelData = data;
                 _this.emit('change', _this.get());
-                return id;
+                return true;
             };
 
             // the getter
-            this.get = function (id) {
-                if (id) {
-                    return _this.data[id];
-                } else {
-                    //clean up protoype
-                    var name = void 0;
-                    var cleanData = {};
-                    for (name in _this.data) {
-                        if (_this.data.hasOwnProperty(name)) {
-                            cleanData[name] = _this.data[name];
-                        }
-                    }
-                    return cleanData;
-                }
+            this.get = function () {
+                return _this.modelData;
             };
 
             // the updater
-            this.update = function (id, updateData) {
-                if (id && updateData && _this.data[id]) {
-                    _this.data[id] = _.extend({}, _this.data[id], updateData);
+            this.update = function (updateData) {
+
+                if (updateData) {
+                    _this.modelData = _.extend(_this.modelData, updateData);
                     _this.emit('change', _this.get());
-                    return _this.get(id);
+                    return true;
                 } else {
-                    return;
+                    return false;
                 }
             };
 
             // the deleter
-            this.delete = function (id) {
-                if (id) {
-                    delete _this.data[id];
-                    _this.emit('change', _this.get());
+            this.delete = function () {
+                _this.modelData = {};
+                _this.emit('change', _this.get());
+                return true;
+            };
+
+            // run it on instantiation
+            this.initialize();
+        };
+
+        /*
+        COLLECTION
+        */
+
+        var Collection = function Collection(settings) {
+            var _this2 = this;
+
+            // a place to hold some settings
+            this.settings = settings || {};
+
+            // where the data is held for the model
+            this.collectionData = [];
+
+            // this is called whenever the model is instantiated
+            this.initialize = function () {};
+
+            // the setter
+            this.set = function (data) {
+
+                if (data) {
+                    _this2.collectionData.push(data);
+                    _this2.emit('change', _this2.get());
                     return true;
                 } else {
-                    _this.data = {};
-                    _this.emit('change', _this.get());
-                    return _this.get();
+                    return false;
+                }
+            };
+
+            // the getter
+            this.get = function (index) {
+
+                if (!isNaN(index)) {
+                    return _this2.collectionData[index];
+                } else {
+                    return _this2.collectionData;
+                }
+            };
+
+            // the updater
+            this.update = function (index, updateData) {
+
+                if (!isNaN(index) && updateData && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
+                    _this2.collectionData[index].modelData = _.extend(_this2.collectionData[index].modelData, updateData);
+                    _this2.emit('change', _this2.get());
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            // the deleter
+            this.delete = function (index) {
+
+                if (!isNaN(index) && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
+                    delete _this2.collectionData[index];
+                    _this2.emit('change', _this2.get());
+                    return true;
+                } else {
+                    _this2.collectionData = [];
+                    _this2.emit('change', _this2.get());
+                    return true;
                 }
             };
 
             // run it on instantiation
-            this.init();
+            this.initialize();
         };
 
         // this sets up the events
         util.inherits(Model, EventEmitter);
+        util.inherits(Collection, EventEmitter);
 
-        module.exports = Model;
+        module.exports = {
+            Model: Model,
+            Collection: Collection
+        };
     })(_events2.default, _util2.default, _lodash2.default);
 });

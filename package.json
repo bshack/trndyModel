@@ -1,6 +1,6 @@
 {
     "name":"trndymodel",
-    "version":"1.0.3",
+    "version":"1.0.5",
     "description":"simple js data model that emits events on data change",
     "main":"dist/index.js",
     "scripts":{
