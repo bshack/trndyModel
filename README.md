@@ -147,7 +147,7 @@ modelColors.update(1, {
 
 
 // delete the blue model from the collection
-// this removes the model from the collection.
+// this removes the model from the collection array.
 // emits 'change' event
 
 modelColors.delete(2);

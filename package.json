@@ -1,7 +1,7 @@
 {
     "name":"trndymodel",
     "version":"1.0.5",
-    "description":"simple js data model that emits events on data change",
+    "description":"A simple JS data model that emits events on data change. Offers support for collections of models.",
     "main":"dist/index.js",
     "scripts":{
         "postinstall":"./node_modules/babel-cli/bin/babel.js ./src/index.js --out-file ./dist/index.js"
