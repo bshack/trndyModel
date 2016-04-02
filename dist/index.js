@@ -117,8 +117,12 @@
 
                 if (!isNaN(index) && updateData && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
                     _this2.collectionData[index].modelData = _.extend(_this2.collectionData[index].modelData, updateData);
+                    _this2.collectionData[index].emit('change', _this2.collectionData[index].get());
                     _this2.emit('change', _this2.get());
                     return true;
+                } else if (Array.isArray(index)) {
+                    _this2.collectionData = index;
+                    _this2.emit('change', _this2.get());
                 } else {
                     return false;
                 }
@@ -128,7 +132,7 @@
             this.delete = function (index) {
 
                 if (!isNaN(index) && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
-                    delete _this2.collectionData[index];
+                    _.pullAt(_this2.collectionData, index);
                     _this2.emit('change', _this2.get());
                     return true;
                 } else {

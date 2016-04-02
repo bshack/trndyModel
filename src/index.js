@@ -97,8 +97,12 @@ import _ from 'lodash';
             if (!isNaN(index) && updateData && this.collectionData[index] && this.collectionData[index].modelData) {
                 this.collectionData[index].modelData =
                     _.extend(this.collectionData[index].modelData, updateData);
+                this.collectionData[index].emit('change', this.collectionData[index].get());
                 this.emit('change', this.get());
                 return true;
+            } else if (Array.isArray(index)) {
+                this.collectionData = index;
+                this.emit('change', this.get());
             } else {
                 return false;
             }
@@ -109,7 +113,7 @@ import _ from 'lodash';
         this.delete = index => {
 
             if (!isNaN(index) && this.collectionData[index] && this.collectionData[index].modelData) {
-                delete this.collectionData[index];
+                _.pullAt(this.collectionData, index);
                 this.emit('change', this.get());
                 return true;
             } else {

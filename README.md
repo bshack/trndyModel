@@ -2,7 +2,7 @@
 
 A simple JS data model that emits events on data change. Offers support for collections of models.
 
-## Install
+Install the node module
 
 ```
 npm install trndymodel --save
@@ -12,82 +12,109 @@ npm install trndymodel --save
 
 ### Models
 
+trndyModel supports models and collections, this first example is for models only.
+
+#### Require
+
 ```
-// trndyModel supports models and collections
-// this example is for models only
-
 var Model = require('trndymodel').Model;
+```
 
+#### Instantiate
 
-// instantiate a new model
-
+```
 var modelColor = new Model();
+```
 
+Optionally you can also set the model data at instantiation:
 
-// optionally you can also set the model data at instantiation
-
+```
 var modelColor = new Model({
     name: 'red'
 });
+```
 
+#### Events
 
-//add change listener to the model
+Add change listener to the model. Whenever a model changes it will emit a 'change' event.
 
+```
 modelColor.on('change', function(data) {
     window.console.log('Model Data Change:', data);
 });
+```
 
+#### Set
 
-// set some data in the model
-// emits 'change' event
+Save some data in the model. This will emit a 'change' event.
 
+```
 modelColor.set({
     name: 'red'
 });
+```
 
+#### Get
 
-// get the stored data
+Retreive the stored model data.
 
+```
 var redColorData = modelColor.get();
+```
 
+#### Update
 
-// update the stored data with new data
-// this extends the model data, existing properties are overwritten, new properties are added
-// emits 'change' event
+Update the stored model data with new data. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
 
+```
 modelColor.update({
     name: 'blue',
     isPrimaryColor: true
 });
+```
 
+#### Delete
 
-// delete the data
-// this sets the model data to an empty object
-// emits 'change' event
+This sets the model data to an empty object.  This will emit a 'change' event.
 
+```
 modelColor.delete();
-
-
 ```
 
-#### Collections
+### Collections
+
+This example is for using models in conjunction collections.
+
+#### Require
 
 ```
-// this example is for using models with collections
-
 var Model = require('trndymodel').Model;
 var Collection = require('trndymodel').Collection;
+```
 
+#### Instantiate
 
-// instantiate a couple new models
+Create a couple new models.
 
+```
 var modelColor1 = new Model();
 var modelColor2 = new Model();
 var modelColor3 = new Model();
+```
 
+Now create a new collection to hold the models
 
-//add change listeners to the models
+```
+var modelColors = new Collection();
+```
 
+#### Events
+
+Add change listeners to the models and the collection. Whenever these models or this collection change they will emit a 'change' event.
+
+models:
+
+```
 modelColor1.on('change', function(data) {
     window.console.log('Model 1 Data Change:', data);
 });
@@ -98,22 +125,25 @@ modelColor3.on('change', function(data) {
     window.console.log('Model 3 Data Change:', data);
 });
 
-
-// instantiate a new collection to hold the models
-
-var modelColors = new Collection();
-
-
-//add change listener to the collection
-
 modelColors.on('change', function(data) {
     window.console.log('Collection Data Change:', data);
 });
 
+```
 
-// set some data in the models
-// emits 'change' event
+collection:
 
+```
+modelColors.on('change', function(data) {
+    window.console.log('Collection Data Change:', data);
+});
+```
+
+#### Set
+
+Save some data in the model. This will emit a 'change' event.
+
+```
 modelColor1.set({
     name: 'red'
 });
@@ -123,49 +153,74 @@ modelColor2.set({
 modelColor3.set({
     name: 'blue'
 });
+```
 
+Now add the models to the collection. This will emit a 'change' event.
 
-// add the models to the collection
-// emits 'change' event
-
+```
 modelColors.set(modelColor1);
 modelColors.set(modelColor2);
 modelColors.set(modelColor3);
+```
 
+#### Get
 
-// get all models in the collection
-// returns array
+This returns then entire collection data array.
 
+```
 var allColors = modelColors.get();
+```
 
+This returns only a single model from the collection array.
 
-// get the green model from the collection
-
+```
 var greenData = modelColors.get(1);
+```
 
+#### Update
 
-// update the green model in the collection
-// this extends the model data, existing properties are overwritten, new properties are added.
-// passing an index is required
-// emits 'change' event
+This updates a single stored model with new data by array a the specified index. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
 
+```
 modelColors.update(1, {
     isPrimaryColor: true
 });
+```
 
+This updates the collection new data. The new data must be an array. This will emit a 'change' event.
+
+```
+modelColors.update([
+    new Model({
+        name: 'cyan'
+    }),
+    new Model({
+        name: 'magenta'
+    }),
+    new Model({
+        name: 'yellow'
+    }),
+    new Model({
+        name: 'black'
+    })
+]);
+```
 
 // delete the blue model from the collection
 // this removes the model from the collection array.
 // emits 'change' event
 
-modelColors.delete(2);
 
+```
+modelColors.delete(2);
+```
 
 // delete all the collection
 // this sets the collection data to an empty array.
 // emits 'change' event
 
+
+
+```
 modelColors.delete();
-
-
 ```
