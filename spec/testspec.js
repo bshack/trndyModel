@@ -48,10 +48,16 @@ describe("A Model", function() {
         expect(modelColor.delete).toEqual(jasmine.any(Function));
     });
     it("will save data in the model using set", function() {
-        modelColor.set({
+        let setReturns = modelColor.set({
             name: 'red'
         });
         expect(modelColor.modelData.name).toEqual('red');
+        expect(setReturns).toEqual(true);
+    });
+    it("will not save data in the model using set when no data is passed in", function() {
+        let setReturns = modelColor.set();
+        expect(modelColor.modelData).toEqual({});
+        expect(setReturns).toEqual(false);
     });
     it("will retrieve data in the model using get", function() {
         modelColor.set({
@@ -64,21 +70,25 @@ describe("A Model", function() {
         modelColor.set({
             name: 'red'
         });
-        modelColor.update({
+        let updateReturns = modelColor.update({
             name: 'blue',
             isPrimaryColor: true
         });
+        let updateReturnsEmpty = modelColor.update();
         expect(modelColor.get()).toEqual({
             name: 'blue',
             isPrimaryColor: true
         });
+        expect(updateReturns).toEqual(true);
+        expect(updateReturnsEmpty).toEqual(false);
     });
     it("will remove the data from the model using delete", function() {
         modelColor.set({
             name: 'red'
         });
-        modelColor.delete();
+        let deleteReturns = modelColor.delete();
         expect(modelColor.get()).toEqual({});
+        expect(deleteReturns).toEqual(true);
     });
 });
 
@@ -121,10 +131,16 @@ describe("A Collection", function() {
         expect(modelColors.delete).toEqual(jasmine.any(Function));
     });
     it("will save data in the collection using set", function() {
-        modelColors.set(modelColor1);
+        let setReturns = modelColors.set(modelColor1);
         expect(modelColors.collectionData[0].modelData).toEqual({
             name: 'red'
         });
+        expect(setReturns).toEqual(true);
+    });
+    it("will not save data in the collection using set when data is not passed in", function() {
+        let setReturns = modelColors.set();
+        expect(modelColors.collectionData).toEqual([]);
+        expect(setReturns).toEqual(false);
     });
     it("will retrieve all the data in the collection using get", function() {
         modelColors.set(modelColor1);
@@ -145,7 +161,7 @@ describe("A Collection", function() {
     });
     it("will update model data in the collection using update with the specified index", function() {
         modelColors.set(modelColor1);
-        modelColors.update(0, {
+        let updateReturns = modelColors.update(0, {
             name: 'blue',
             isPrimaryColor: true
         });
@@ -153,10 +169,11 @@ describe("A Collection", function() {
             name: 'blue',
             isPrimaryColor: true
         });
+        expect(updateReturns).toEqual(true);
     });
-    it("will update model data in the collection using update", function() {
+    it("will update model data in the collection using update with an array of models", function() {
         modelColors.set(modelColor1);
-        modelColors.update([
+        let updateReturns = modelColors.update([
             new Model({
                 name: 'cyan'
             }),
@@ -173,6 +190,28 @@ describe("A Collection", function() {
         expect(modelColors.get(3).modelData).toEqual({
             name: 'black'
         });
+        expect(updateReturns).toEqual(true);
+    });
+    it("will not update all model data in the collection using with the argument is not an array", function() {
+        modelColors.update([
+            new Model({
+                name: 'cyan'
+            }),
+            new Model({
+                name: 'magenta'
+            }),
+            new Model({
+                name: 'yellow'
+            }),
+            new Model({
+                name: 'black'
+            })
+        ]);
+        let updateReturns = modelColors.update({});
+        expect(modelColors.get(3).modelData).toEqual({
+            name: 'black'
+        });
+        expect(updateReturns).toEqual(false);
     });
     it("will remove model data from the the collection using delete at the specified index", function() {
         modelColors.update([
@@ -189,17 +228,41 @@ describe("A Collection", function() {
                 name: 'black'
             })
         ]);
-        modelColors.delete(2);
+        let deleteReturns = modelColors.delete(2);
         expect(modelColors.get(2).modelData).toEqual({
             name: 'black'
         });
         expect(modelColors.get().length).toEqual(3);
+        expect(deleteReturns).toEqual(true);
+    });
+    it("will not remove model data from the the collection using delete at the specified index when that index does not exist", function() {
+        modelColors.update([
+            new Model({
+                name: 'cyan'
+            }),
+            new Model({
+                name: 'magenta'
+            }),
+            new Model({
+                name: 'yellow'
+            }),
+            new Model({
+                name: 'black'
+            })
+        ]);
+        let deleteReturns = modelColors.delete(10);
+        expect(modelColors.get(2).modelData).toEqual({
+            name: 'yellow'
+        });
+        expect(modelColors.get().length).toEqual(4);
+        expect(deleteReturns).toEqual(false);
     });
     it("will remove all the model data from the collection using delete", function() {
-        modelColors.set({
+        let deleteReturns = modelColors.set({
             name: 'red'
         });
         modelColors.delete();
         expect(modelColors.get()).toEqual([]);
+        expect(deleteReturns).toEqual(true);
     });
 });

@@ -1,8 +1,6 @@
 # trndyModel
 
-[![Build Status](https://travis-ci.org/bshack/trndyModel.svg?branch=master)](https://travis-ci.org/bshack/trndyModel)
-
-[![Coverage Status](https://coveralls.io/repos/github/bshack/trndyModel/badge.svg?branch=master)](https://coveralls.io/github/bshack/trndyModel?branch=master)
+[![Build Status](https://travis-ci.org/bshack/trndyModel.svg?branch=master)](https://travis-ci.org/bshack/trndyModel) [![Coverage Status](https://coveralls.io/repos/github/bshack/trndyModel/badge.svg?branch=master)](https://coveralls.io/github/bshack/trndyModel?branch=master)
 
 A simple JS data model that emits events on data change. Offers support for collections of models.
 

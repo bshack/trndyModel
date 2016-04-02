@@ -20,9 +20,13 @@ import _ from 'lodash';
 
         // the setter
         this.set = data => {
-            this.modelData = data;
-            this.emit('change', this.get());
-            return true;
+            if (data) {
+                this.modelData = data;
+                this.emit('change', this.get());
+                return true;
+            } else {
+                return false;
+            }
         };
 
         // the getter
@@ -103,6 +107,7 @@ import _ from 'lodash';
             } else if (Array.isArray(index)) {
                 this.collectionData = index;
                 this.emit('change', this.get());
+                return true;
             } else {
                 return false;
             }
@@ -116,10 +121,12 @@ import _ from 'lodash';
                 _.pullAt(this.collectionData, index);
                 this.emit('change', this.get());
                 return true;
-            } else {
+            } else if (!index) {
                 this.collectionData = [];
                 this.emit('change', this.get());
                 return true;
+            } else {
+                return false;
             }
 
         };

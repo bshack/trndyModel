@@ -44,9 +44,13 @@
 
             // the setter
             this.set = function (data) {
-                _this.modelData = data;
-                _this.emit('change', _this.get());
-                return true;
+                if (data) {
+                    _this.modelData = data;
+                    _this.emit('change', _this.get());
+                    return true;
+                } else {
+                    return false;
+                }
             };
 
             // the getter
@@ -123,6 +127,7 @@
                 } else if (Array.isArray(index)) {
                     _this2.collectionData = index;
                     _this2.emit('change', _this2.get());
+                    return true;
                 } else {
                     return false;
                 }
@@ -135,10 +140,12 @@
                     _.pullAt(_this2.collectionData, index);
                     _this2.emit('change', _this2.get());
                     return true;
-                } else {
+                } else if (!index) {
                     _this2.collectionData = [];
                     _this2.emit('change', _this2.get());
                     return true;
+                } else {
+                    return false;
                 }
             };
 
