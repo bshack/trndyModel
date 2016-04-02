@@ -210,7 +210,7 @@ modelColors.update([
 
 ### Delete
 
-This delete a model from the collection at the specified index. This will emit a 'change' event.
+This deletes a model from the collection at the specified index. This will emit a 'change' event.
 
 ```
 modelColors.delete(2);
