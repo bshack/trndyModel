@@ -2,7 +2,7 @@
 
 A simple JS data model that emits events on data change. Offers support for collections of models.
 
-Install the node module
+Install the node module:
 
 ```
 npm install trndymodel --save
