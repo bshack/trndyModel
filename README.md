@@ -40,7 +40,7 @@ Add change listener to the model. Whenever a model changes it will emit a 'chang
 
 ```
 modelColor.on('change', function(data) {
-    window.console.log('Model Data Change:', data);
+    console.log('Model Data Change:', data);
 });
 ```
 
@@ -102,7 +102,7 @@ var modelColor2 = new Model();
 var modelColor3 = new Model();
 ```
 
-Now create a new collection to hold the models
+Now create a new collection to hold the models.
 
 ```
 var modelColors = new Collection();
@@ -116,17 +116,13 @@ models:
 
 ```
 modelColor1.on('change', function(data) {
-    window.console.log('Model 1 Data Change:', data);
+    console.log('Model 1 Data Change:', data);
 });
 modelColor2.on('change', function(data) {
-    window.console.log('Model 2 Data Change:', data);
+    console.log('Model 2 Data Change:', data);
 });
 modelColor3.on('change', function(data) {
-    window.console.log('Model 3 Data Change:', data);
-});
-
-modelColors.on('change', function(data) {
-    window.console.log('Collection Data Change:', data);
+    console.log('Model 3 Data Change:', data);
 });
 
 ```
@@ -135,7 +131,7 @@ collection:
 
 ```
 modelColors.on('change', function(data) {
-    window.console.log('Collection Data Change:', data);
+    console.log('Collection Data Change:', data);
 });
 ```
 
@@ -171,7 +167,7 @@ This returns then entire collection data array.
 var allColors = modelColors.get();
 ```
 
-This returns only a single model from the collection array.
+This returns only a single model from the collection array at the specified index.
 
 ```
 var greenData = modelColors.get(1);
@@ -179,7 +175,7 @@ var greenData = modelColors.get(1);
 
 #### Update
 
-This updates a single stored model with new data by array a the specified index. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
+This updates a single stored model with new data by array at the specified index. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
 
 ```
 modelColors.update(1, {
@@ -187,7 +183,7 @@ modelColors.update(1, {
 });
 ```
 
-This updates the collection new data. The new data must be an array. This will emit a 'change' event.
+This updates the collection with all new data. The new data must be an array. This will emit a 'change' event.
 
 ```
 modelColors.update([
@@ -206,20 +202,15 @@ modelColors.update([
 ]);
 ```
 
-// delete the blue model from the collection
-// this removes the model from the collection array.
-// emits 'change' event
+#### Delete
 
+This sets the model data to an empty object at the specified index.  This will emit a 'change' event.
 
 ```
 modelColors.delete(2);
 ```
 
-// delete all the collection
-// this sets the collection data to an empty array.
-// emits 'change' event
-
-
+This sets the collection data to an empty array.  This will emit a 'change' event.
 
 ```
 modelColors.delete();
