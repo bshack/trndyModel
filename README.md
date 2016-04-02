@@ -42,6 +42,10 @@ modelColor.on('change', function(data) {
 });
 ```
 
+Model and collection events are emited using Node.js' events module. For more options on how to listen to events please look at the Node.js documentation:
+
+https://nodejs.org/api/events.html
+
 ### Set
 
 Save some data in the model. This will emit a 'change' event.
@@ -132,6 +136,10 @@ modelColors.on('change', function(data) {
     console.log('Collection Data Change:', data);
 });
 ```
+
+Model and collection events are emited using Node.js' events module. For more options on how to listen to events please look at the Node.js documentation:
+
+https://nodejs.org/api/events.html
 
 ### Set
 
