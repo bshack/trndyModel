@@ -8,19 +8,17 @@ Install the node module:
 npm install trndymodel --save
 ```
 
-## Usage
-
-### Models
+## Models Usage
 
 trndyModel supports models and collections, this first example is for models only.
 
-#### Require
+### Require
 
 ```
 var Model = require('trndymodel').Model;
 ```
 
-#### Instantiate
+### Instantiate
 
 ```
 var modelColor = new Model();
@@ -34,7 +32,7 @@ var modelColor = new Model({
 });
 ```
 
-#### Events
+### Events
 
 Add change listener to the model. Whenever a model changes it will emit a 'change' event.
 
@@ -44,7 +42,7 @@ modelColor.on('change', function(data) {
 });
 ```
 
-#### Set
+### Set
 
 Save some data in the model. This will emit a 'change' event.
 
@@ -54,7 +52,7 @@ modelColor.set({
 });
 ```
 
-#### Get
+### Get
 
 Retreive the stored model data.
 
@@ -62,7 +60,7 @@ Retreive the stored model data.
 var redColorData = modelColor.get();
 ```
 
-#### Update
+### Update
 
 Update the stored model data with new data. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
 
@@ -73,7 +71,7 @@ modelColor.update({
 });
 ```
 
-#### Delete
+### Delete
 
 This sets the model data to an empty object.  This will emit a 'change' event.
 
@@ -81,18 +79,18 @@ This sets the model data to an empty object.  This will emit a 'change' event.
 modelColor.delete();
 ```
 
-### Collections
+## Collections Usage
 
 This example is for using models in conjunction collections.
 
-#### Require
+### Require
 
 ```
 var Model = require('trndymodel').Model;
 var Collection = require('trndymodel').Collection;
 ```
 
-#### Instantiate
+### Instantiate
 
 Create a couple new models.
 
@@ -108,7 +106,7 @@ Now create a new collection to hold the models.
 var modelColors = new Collection();
 ```
 
-#### Events
+### Events
 
 Add change listeners to the models and the collection. Whenever these models or this collection change they will emit a 'change' event.
 
@@ -135,7 +133,7 @@ modelColors.on('change', function(data) {
 });
 ```
 
-#### Set
+### Set
 
 Save some data in the model. This will emit a 'change' event.
 
@@ -159,7 +157,7 @@ modelColors.set(modelColor2);
 modelColors.set(modelColor3);
 ```
 
-#### Get
+### Get
 
 This returns then entire collection data array.
 
@@ -173,7 +171,7 @@ This returns only a single model from the collection array at the specified inde
 var greenData = modelColors.get(1);
 ```
 
-#### Update
+### Update
 
 This updates a single stored model with new data by array at the specified index. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
 
@@ -202,7 +200,7 @@ modelColors.update([
 ]);
 ```
 
-#### Delete
+### Delete
 
 This sets the model data to an empty object at the specified index.  This will emit a 'change' event.
 
