@@ -109,19 +109,17 @@ var modelColor3 = new Model();
 Now create a new collection to hold the models.
 
 ```
-var modelColors = new Collection([
-    modelColor1,
-    modelColor2,
-    modelColor3
-]);
+var modelColors = new Collection();
 ```
 
 Optionally you can also set the collection data at instantiation:
 
 ```
-var modelColor = new Model({
-    name: 'red'
-});
+var modelColors = new Collection([
+    modelColor1,
+    modelColor2,
+    modelColor3
+]);
 ```
 
 ### Events
