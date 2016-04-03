@@ -37,14 +37,18 @@
             var _this = this;
 
             // where the data is held for the model
-            this.modelData = modelData || {};
+            if (modelData && _.isObject(modelData)) {
+                this.modelData = modelData;
+            } else {
+                this.modelData = {};
+            }
 
             // this is called whenever the model is instantiated
             this.initialize = function () {};
 
             // the setter
             this.set = function (data) {
-                if (data) {
+                if (data && _.isObject(data)) {
                     _this.modelData = data;
                     _this.emit('change', _this.get());
                     return true;
@@ -61,7 +65,7 @@
             // the updater
             this.update = function (updateData) {
 
-                if (updateData) {
+                if (updateData && _.isObject(updateData)) {
                     _this.modelData = _.extend(_this.modelData, updateData);
                     _this.emit('change', _this.get());
                     return true;
@@ -88,8 +92,12 @@
         var Collection = function Collection(collectionData) {
             var _this2 = this;
 
-            // where the data is held for the model
-            this.collectionData = collectionData || [];
+            // where the data is held for the collection
+            if (collectionData && _.isArray(collectionData)) {
+                this.collectionData = collectionData;
+            } else {
+                this.collectionData = [];
+            }
 
             // this is called whenever the model is instantiated
             this.initialize = function () {};
@@ -97,8 +105,20 @@
             // the setter
             this.set = function (data) {
 
+                if (_.isArray(data)) {
+                    _this2.collectionData = data;
+                    _this2.emit('change', _this2.get());
+                    return true;
+                } else {
+                    return false;
+                }
+            };
+
+            // the pusher
+            this.push = function (data) {
+
                 if (data) {
-                    _this2.collectionData.push(data);
+                    _this2.collectionData = _.concat(_this2.collectionData, data);
                     _this2.emit('change', _this2.get());
                     return true;
                 } else {
@@ -109,7 +129,7 @@
             // the getter
             this.get = function (index) {
 
-                if (!isNaN(index)) {
+                if (_.isNumber(index)) {
                     return _this2.collectionData[index];
                 } else {
                     return _this2.collectionData;
@@ -119,12 +139,29 @@
             // the updater
             this.update = function (index, updateData) {
 
-                if (!isNaN(index) && updateData && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
-                    _this2.collectionData[index].modelData = _.extend(_this2.collectionData[index].modelData, updateData);
-                    _this2.collectionData[index].emit('change', _this2.collectionData[index].get());
-                    _this2.emit('change', _this2.get());
-                    return true;
-                } else if (Array.isArray(index)) {
+                if (_.isNumber(index) && _this2.collectionData[index]) {
+
+                    // if we are updating a model
+                    if (_.isObject(updateData) && _.isObject(_this2.collectionData[index].modelData)) {
+
+                        _this2.collectionData[index].modelData = _.extend(_this2.collectionData[index].modelData, updateData);
+                        _this2.collectionData[index].emit('change', _this2.collectionData[index].get());
+                        _this2.emit('change', _this2.get());
+                        return true;
+
+                        // if we are updating a standard object
+                    } else if (_.isObject(updateData) && _.isObject(_this2.collectionData[index])) {
+                            _this2.collectionData[index] = _.extend(_this2.collectionData[index], updateData);
+                            _this2.emit('change', _this2.get());
+                            return true;
+                        } else if (updateData) {
+                            _this2.collectionData[index] = updateData;
+                            _this2.emit('change', _this2.get());
+                            return true;
+                        } else {
+                            return false;
+                        }
+                } else if (_.isArray(index)) {
                     _this2.collectionData = index;
                     _this2.emit('change', _this2.get());
                     return true;
@@ -136,7 +173,7 @@
             // the deleter
             this.delete = function (index) {
 
-                if (!isNaN(index) && _this2.collectionData[index] && _this2.collectionData[index].modelData) {
+                if (_.isNumber(index) && _this2.collectionData[index]) {
                     _.pullAt(_this2.collectionData, index);
                     _this2.emit('change', _this2.get());
                     return true;

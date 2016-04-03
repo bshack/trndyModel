@@ -109,7 +109,19 @@ var modelColor3 = new Model();
 Now create a new collection to hold the models.
 
 ```
-var modelColors = new Collection();
+var modelColors = new Collection([
+    modelColor1,
+    modelColor2,
+    modelColor3
+]);
+```
+
+Optionally you can also set the collection data at instantiation:
+
+```
+var modelColor = new Model({
+    name: 'red'
+});
 ```
 
 ### Events
@@ -145,26 +157,47 @@ https://nodejs.org/api/events.html
 
 ### Set
 
-Save some data in the model. This will emit a 'change' event.
+Set the collection array contents. The data must be an array and this will overwrite any existing array data stored completely. This will emit a 'change' event.
 
 ```
-modelColor1.set({
+modelColor1.set([
+    new Model({
+        name: 'cyan'
+    }),
+    new Model({
+        name: 'magenta'
+    }),
+    new Model({
+        name: 'yellow'
+    }),
+    new Model({
+        name: 'black'
+    })
+]);
+```
+
+### Push
+
+Add some items to the array. This will emit a 'change' event.
+
+```
+modelColor1.push({
     name: 'red'
 });
-modelColor2.set({
+modelColor2.push({
     name: 'green'
 });
-modelColor3.set({
+modelColor3.push({
     name: 'blue'
 });
 ```
 
-Now add the models to the collection. This will emit a 'change' event.
+Now add the items to the collection. This will emit a 'change' event.
 
 ```
-modelColors.set(modelColor1);
-modelColors.set(modelColor2);
-modelColors.set(modelColor3);
+modelColors.push(modelColor1);
+modelColors.push(modelColor2);
+modelColors.push(modelColor3);
 ```
 
 ### Get
@@ -175,7 +208,7 @@ This returns then entire collection data array.
 var allColors = modelColors.get();
 ```
 
-This returns only a single model from the collection array at the specified index.
+This returns only a single item from the collection array at the specified index.
 
 ```
 var greenData = modelColors.get(1);
@@ -183,7 +216,7 @@ var greenData = modelColors.get(1);
 
 ### Update
 
-This updates a single stored model with new data by array at the specified index. This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
+This updates a single stored item in the array with new data at the specified index. This extends the existing item data when the item data type is an object, old properties are overwritten, new properties are added to the object. Other data types are simply replaced with the new updated data. This will emit a 'change' event.
 
 ```
 modelColors.update(1, {
@@ -191,7 +224,13 @@ modelColors.update(1, {
 });
 ```
 
-This updates the collection with all new data. The new data must be an array. This will emit a 'change' event.
+or when the item data type is not an object:
+
+```
+modelColors.update(1, true);
+```
+
+When you don't pass in an index argument the collection is updated with all new data. The new data must be an array. This will emit a 'change' event.
 
 ```
 modelColors.update([
