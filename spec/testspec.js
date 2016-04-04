@@ -168,7 +168,18 @@ describe("A Collection", function() {
         expect(modelColors.collectionData).toEqual([]);
         expect(setReturns).toEqual(false);
     });
-    it("will save data in the collection using push", function() {
+    it("will save data to the end of the collection using push with an array", function() {
+        modelColors.push(modelColor1);
+        let pushReturns = modelColors.push([
+            modelColor2,
+            modelColor3
+        ]);
+        expect(modelColors.collectionData[2].modelData).toEqual({
+            name: 'blue'
+        });
+        expect(pushReturns).toEqual(true);
+    });
+    it("will save data to the end of the collection using push with a single item", function() {
         let pushReturns = modelColors.push(modelColor1);
         expect(modelColors.collectionData[0].modelData).toEqual({
             name: 'red'

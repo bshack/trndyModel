@@ -62,7 +62,7 @@ modelColor.set({
 });
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'set' events.
 
 ### Get
 
@@ -83,7 +83,7 @@ modelColor.update({
 });
 ```
 
-This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit a 'change' event.
+This extends the existing model data, old properties are overwritten, new properties are added to the model. This will emit 'change' and 'update' events.
 
 ### Delete
 
@@ -93,7 +93,7 @@ This sets the model data to an empty object:
 modelColor.delete();
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'delete' events.
 
 ## Collection Usage
 
@@ -154,7 +154,6 @@ modelColor2.on('change', function(data) {
 modelColor3.on('change', function(data) {
     console.log('Model 3 Data Change:', data);
 });
-
 ```
 
 collection:
@@ -183,11 +182,11 @@ modelColor1.set([
 ]);
 ```
 
-The data must be in an array and this will overwrite any existing array data stored completely. This will emit a 'change' event.
+The data must be in an array and this will overwrite any existing array data stored completely. This will emit 'change' and 'set' events.
 
 ### Push
 
-Add the items to the end collection array:
+Add single items to the end of the stored collection array:
 
 ```
 modelColors.push(modelColor1);
@@ -195,7 +194,7 @@ modelColors.push(modelColor2);
 modelColors.push(modelColor3);
 ```
 
-or add array data to the end of the stored array:
+or add multiple items to the end of the stored collection array:
 
 ```
 modelColor1.push([
@@ -205,7 +204,7 @@ modelColor1.push([
 ]);
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'push' events.
 
 ### Get
 
@@ -223,7 +222,7 @@ var greenData = modelColors.get(1);
 
 ### Update
 
-This updates a single stored item in the array with new data at the specified index:
+This updates a single item in the collection array with new object data at the specified index:
 
 ```
 modelColors.update(1, {
@@ -231,15 +230,15 @@ modelColors.update(1, {
 });
 ```
 
-This extends the existing item data when the item data type is an object, old properties are overwritten, new properties are added to the object. Other data types are simply replaced with the new updated data.
+This extends the existing item object data, old properties are overwritten, new properties are added to the object.
 
-or when the item data type is not an object:
+or when the item data type is not an object it will simply overwrite completely the old data with new:
 
 ```
 modelColors.update(1, true);
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'update' events on the collection and on the item if it is a model.
 
 When you don't pass in an index argument the collection is updated with all new data:
 
@@ -260,7 +259,7 @@ modelColors.update([
 ]);
 ```
 
-The new data must be an array. This will emit a 'change' event.
+The new data must be an array. This will emit 'change' and 'update' events only on the collection.
 
 ### Delete
 
@@ -270,7 +269,7 @@ This deletes a model from the collection at the specified index:
 modelColors.delete(2);
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'delete' events.
 
 This sets the collection data to an empty array.
 
@@ -278,4 +277,4 @@ This sets the collection data to an empty array.
 modelColors.delete();
 ```
 
-This will emit a 'change' event.
+This will emit 'change' and 'delete' events.

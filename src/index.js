@@ -12,13 +12,6 @@ import _ from 'lodash';
 
     const Model = function(modelData) {
 
-        // where the data is held for the model
-        if (modelData && _.isObject(modelData)) {
-            this.modelData = modelData;
-        } else {
-            this.modelData = {};
-        }
-
         // this is called whenever the model is instantiated
         this.initialize = () => {};
 
@@ -27,6 +20,7 @@ import _ from 'lodash';
             if (data && _.isObject(data)) {
                 this.modelData = data;
                 this.emit('change', this.get());
+                this.emit('set', this.get());
                 return true;
             } else {
                 return false;
@@ -42,8 +36,9 @@ import _ from 'lodash';
         this.update = (updateData) => {
 
             if (updateData && _.isObject(updateData)) {
-                this.modelData = _.extend(this.modelData, updateData);
+                this.set(_.extend(this.get(), updateData));
                 this.emit('change', this.get());
+                this.emit('update', this.get());
                 return true;
             } else {
                 return false;
@@ -53,10 +48,18 @@ import _ from 'lodash';
 
         // the deleter
         this.delete = () => {
-            this.modelData = {};
+            this.set({});
             this.emit('change', this.get());
+            this.emit('delete', this.get());
             return true;
         };
+
+        // where the data is held for the model
+        if (modelData && _.isObject(modelData)) {
+            this.set(modelData);
+        } else {
+            this.set({});
+        }
 
         // run it on instantiation
         this.initialize();
@@ -69,83 +72,71 @@ import _ from 'lodash';
 
     const Collection = function(collectionData) {
 
-        // where the data is held for the collection
-        if (collectionData && _.isArray(collectionData)) {
-            this.collectionData = collectionData;
-        } else {
-            this.collectionData = [];
-        }
-
         // this is called whenever the model is instantiated
         this.initialize = () => {};
 
         // the setter
         this.set = data => {
-
             if (_.isArray(data)) {
                 this.collectionData = data;
                 this.emit('change', this.get());
+                this.emit('set', this.get());
                 return true;
             } else {
                 return false;
             }
-
         };
 
         // the pusher
         this.push = data => {
-
             if (data) {
-                this.collectionData = _.concat(this.collectionData, data);
+                this.set(_.concat(this.get(), data));
                 this.emit('change', this.get());
+                this.emit('push', this.get());
                 return true;
             } else {
                 return false;
             }
-
         };
 
         // the getter
         this.get = index => {
-
             if (_.isNumber(index)) {
                 return this.collectionData[index];
             } else {
                 return this.collectionData;
             }
-
         };
 
         // the updater
         this.update = (index, updateData) => {
-
-            if (_.isNumber(index) && this.collectionData[index]) {
-
+            if (_.isNumber(index) && this.get(index)) {
                 // if we are updating a model
-                if (_.isObject(updateData) && _.isObject(this.collectionData[index].modelData)) {
-
-                    this.collectionData[index].modelData =
-                        _.extend(this.collectionData[index].modelData, updateData);
-                    this.collectionData[index].emit('change', this.collectionData[index].get());
+                if (_.isObject(updateData) && this.get(index).get && _.isObject(this.get(index).get())) {
+                    this.get(index).set(_.extend(this.get(index).get(), updateData));
+                    this.get(index).emit('change', this.get(index).get());
+                    this.get(index).emit('update', this.get(index).get());
                     this.emit('change', this.get());
+                    this.emit('update', this.get());
                     return true;
-
                 // if we are updating a standard object
-                } else if (_.isObject(updateData) && _.isObject(this.collectionData[index])) {
-                    this.collectionData[index] = _.extend(this.collectionData[index], updateData);
+                } else if (_.isObject(updateData) && _.isObject(this.get(index))) {
+                    this.collectionData[index] = _.extend(this.get(index), updateData);
                     this.emit('change', this.get());
+                    this.emit('update', this.get());
                     return true;
                 } else if (updateData) {
                     this.collectionData[index] = updateData;
                     this.emit('change', this.get());
+                    this.emit('update', this.get());
                     return true;
                 } else {
                     return false;
                 }
-
             } else if (_.isArray(index)) {
-                this.collectionData = index;
+                this.set(index);
                 this.emit('change', this.get());
+                this.emit('update', this.get());
                 return true;
             } else {
                 return false;
@@ -155,20 +146,27 @@ import _ from 'lodash';
 
         // the deleter
         this.delete = index => {
-
-            if (_.isNumber(index) && this.collectionData[index]) {
+            if (_.isNumber(index) && this.get(index)) {
                 _.pullAt(this.collectionData, index);
                 this.emit('change', this.get());
+                this.emit('delete', this.get());
                 return true;
             } else if (!index) {
-                this.collectionData = [];
+                this.set([]);
                 this.emit('change', this.get());
+                this.emit('delete', this.get());
                 return true;
             } else {
                 return false;
             }
-
         };
+
+        // where the data is held for the collection
+        if (collectionData && _.isArray(collectionData)) {
+            this.set(collectionData);
+        } else {
+            this.set([]);
+        }
 
         // run it on instantiation
         this.initialize();
