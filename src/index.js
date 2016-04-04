@@ -2,7 +2,7 @@ import EventEmitter from 'events';
 import util from 'util';
 import _ from 'lodash';
 
-(function(EventEmitter, util, _) {
+((EventEmitter, util, _) => {
 
     'use strict';
 
@@ -33,7 +33,7 @@ import _ from 'lodash';
         };
 
         // the updater
-        this.update = (updateData) => {
+        this.update = updateData => {
 
             if (updateData && _.isObject(updateData)) {
                 this.set(_.extend(this.get(), updateData));
@@ -110,6 +110,7 @@ import _ from 'lodash';
 
         // the updater
         this.update = (index, updateData) => {
+            // if updating an item in the array
             if (_.isNumber(index) && this.get(index)) {
                 // if we are updating a model
                 if (_.isObject(updateData) && this.get(index).get && _.isObject(this.get(index).get())) {

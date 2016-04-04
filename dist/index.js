@@ -133,6 +133,7 @@
 
             // the updater
             this.update = function (index, updateData) {
+                // if updating an item in the array
                 if (_.isNumber(index) && _this2.get(index)) {
                     // if we are updating a model
                     if (_.isObject(updateData) && _this2.get(index).get && _.isObject(_this2.get(index).get())) {
