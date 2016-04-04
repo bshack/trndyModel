@@ -95,9 +95,9 @@ modelColor.delete();
 
 This will emit a 'change' event.
 
-## Collections Usage
+## Collection Usage
 
-This example is for using collections.
+Collections are arrays. They can hold models or any other data types.
 
 ### Require
 
@@ -183,11 +183,11 @@ modelColor1.set([
 ]);
 ```
 
-The data must be an array and this will overwrite any existing array data stored completely. This will emit a 'change' event.
+The data must be in an array and this will overwrite any existing array data stored completely. This will emit a 'change' event.
 
 ### Push
 
-Now add the items to the end collection array individually:
+Add the items to the end collection array:
 
 ```
 modelColors.push(modelColor1);
@@ -195,17 +195,27 @@ modelColors.push(modelColor2);
 modelColors.push(modelColor3);
 ```
 
+or add array data to the end of the stored array:
+
+```
+modelColor1.push([
+    modelColor1,
+    modelColor2,
+    modelColor3
+]);
+```
+
 This will emit a 'change' event.
 
 ### Get
 
-This returns then entire collection data array.
+This returns then entire collection data array:
 
 ```
 var allColors = modelColors.get();
 ```
 
-This returns only a single item from the collection array at the specified index.
+This returns only a single item from the collection array at the specified index:
 
 ```
 var greenData = modelColors.get(1);
@@ -221,13 +231,15 @@ modelColors.update(1, {
 });
 ```
 
-This extends the existing item data when the item data type is an object, old properties are overwritten, new properties are added to the object. Other data types are simply replaced with the new updated data. This will emit a 'change' event.
+This extends the existing item data when the item data type is an object, old properties are overwritten, new properties are added to the object. Other data types are simply replaced with the new updated data.
 
 or when the item data type is not an object:
 
 ```
 modelColors.update(1, true);
 ```
+
+This will emit a 'change' event.
 
 When you don't pass in an index argument the collection is updated with all new data:
 
