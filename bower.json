@@ -20,5 +20,6 @@
   "ignore": [
     "**/.*",
     "node_modules"
-  ]
+  ],
+  "version": "1.0.14"
 }
