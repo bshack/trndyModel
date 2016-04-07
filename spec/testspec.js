@@ -25,7 +25,12 @@ describe("A Model", function() {
     let modelColor;
     let modelColorChange;
     beforeEach(function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
         modelColor = new Model();
+    });
+    afterEach(function() {
+        delete this.callback;
     });
     it("is an object", function() {
         expect(modelColor).toEqual(jasmine.any(Object));
@@ -61,6 +66,20 @@ describe("A Model", function() {
         expect(modelColor.modelData.name).toEqual('red');
         expect(setReturns).toEqual(true);
     });
+    it("will save data in the model using set and emit set event", function() {
+        modelColor.on('set', this.callback);
+        let setReturns = modelColor.set({
+            name: 'red'
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will save data in the model using set and emit change event", function() {
+        modelColor.on('change', this.callback);
+        let setReturns = modelColor.set({
+            name: 'red'
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
     it("will not save data in the model using set when no data is passed in", function() {
         let setReturns = modelColor.set();
         expect(modelColor.modelData).toEqual({});
@@ -89,6 +108,28 @@ describe("A Model", function() {
         expect(updateReturns).toEqual(true);
         expect(updateReturnsEmpty).toEqual(false);
     });
+    it("will update data in the model using update and emit update event", function() {
+        modelColor.on('update', this.callback);
+        modelColor.set({
+            name: 'red'
+        });
+        let updateReturns = modelColor.update({
+            name: 'blue',
+            isPrimaryColor: true
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will update data in the model using update and emit change event", function() {
+        modelColor.on('change', this.callback);
+        modelColor.set({
+            name: 'red'
+        });
+        let updateReturns = modelColor.update({
+            name: 'blue',
+            isPrimaryColor: true
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
     it("will remove the data from the model using delete", function() {
         modelColor.set({
             name: 'red'
@@ -97,9 +138,27 @@ describe("A Model", function() {
         expect(modelColor.get()).toEqual({});
         expect(deleteReturns).toEqual(true);
     });
+    it("will remove data in the model using delete and emit delete event", function() {
+        modelColor.on('delete', this.callback);
+        modelColor.set({
+            name: 'red'
+        });
+        let deleteReturns = modelColor.delete();
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will remove data in the model using delete and emit change event", function() {
+        modelColor.on('change', this.callback);
+        modelColor.set({
+            name: 'red'
+        });
+        let deleteReturns = modelColor.delete();
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
 });
 
 describe("A Collection", function() {
+    this.callback = function(data) {};
+    spyOn(this, 'callback');
     const Model = trndyModel.Model;
     const Collection = trndyModel.Collection;
     let modelColor1;
@@ -117,6 +176,9 @@ describe("A Collection", function() {
             name: 'blue'
         });
         modelColors = new Collection();
+    });
+    afterEach(function() {
+        delete this.callback;
     });
     it("is an object", function() {
         expect(modelColors).toEqual(jasmine.any(Object));
@@ -168,6 +230,28 @@ describe("A Collection", function() {
         expect(modelColors.collectionData).toEqual([]);
         expect(setReturns).toEqual(false);
     });
+    it("will save data in the collection using set and emit set event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('set', this.callback);
+        let setReturns = modelColors.set([
+            modelColor1,
+            modelColor2,
+            modelColor3
+        ]);
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will save data in the collection using set and emit change event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('change', this.callback);
+        let setReturns = modelColors.set([
+            modelColor1,
+            modelColor2,
+            modelColor3
+        ]);
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
     it("will save data to the end of the collection using push with an array", function() {
         modelColors.push(modelColor1);
         let pushReturns = modelColors.push([
@@ -190,6 +274,28 @@ describe("A Collection", function() {
         let pushReturns = modelColors.push();
         expect(modelColors.collectionData).toEqual([]);
         expect(pushReturns).toEqual(false);
+    });
+    it("will save data in the collection using push and emit push event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('push', this.callback);
+        modelColors.push(modelColor1);
+        let pushReturns = modelColors.push([
+            modelColor2,
+            modelColor3
+        ]);
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will save data in the collection using push and emit change event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('change', this.callback);
+        modelColors.push(modelColor1);
+        let pushReturns = modelColors.push([
+            modelColor2,
+            modelColor3
+        ]);
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
     });
     it("will retrieve all the data in the collection using get", function() {
         modelColors.push(modelColor1);
@@ -291,6 +397,28 @@ describe("A Collection", function() {
         });
         expect(updateReturns).toEqual(false);
     });
+    it("will update data in the collection using update and emit update event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('update', this.callback);
+        modelColors.push(modelColor1);
+        let updateReturns = modelColors.update(0, {
+            name: 'blue',
+            isPrimaryColor: true
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will update data in the collection using update and emit change event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('change', this.callback);
+        modelColors.push(modelColor1);
+        let updateReturns = modelColors.update(0, {
+            name: 'blue',
+            isPrimaryColor: true
+        });
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
     it("will remove model data from the the collection using delete at the specified index", function() {
         modelColors.update([
             new Model({
@@ -342,5 +470,25 @@ describe("A Collection", function() {
         modelColors.delete();
         expect(modelColors.get()).toEqual([]);
         expect(deleteReturns).toEqual(true);
+    });
+    it("will remove data in the collection using delete and emit delete event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('delete', this.callback);
+        let deleteReturns = modelColors.push({
+            name: 'red'
+        });
+        modelColors.delete();
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("will remove data in the collection using delete and emit change event", function() {
+        this.callback = function(data) {};
+        spyOn(this, 'callback');
+        modelColors.on('change', this.callback);
+        let deleteReturns = modelColors.push({
+            name: 'red'
+        });
+        modelColors.delete();
+        expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
     });
 });
