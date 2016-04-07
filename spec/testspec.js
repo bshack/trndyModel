@@ -25,12 +25,24 @@ describe("A Model", function() {
     let modelColor;
     let modelColorChange;
     beforeEach(function() {
+        let self = this;
         this.callback = function(data) {};
+        this.initCallback = function(data) {};
         spyOn(this, 'callback');
-        modelColor = new Model();
+        spyOn(this, 'initCallback');
+        const ModelTest = class extends Model {
+            initialize() {
+                self.initCallback();
+            }
+            extendedFunction() {
+
+            }
+        };
+        modelColor = new ModelTest();
     });
     afterEach(function() {
         delete this.callback;
+        delete this.initCallback;
     });
     it("is an object", function() {
         expect(modelColor).toEqual(jasmine.any(Object));
@@ -52,6 +64,9 @@ describe("A Model", function() {
     });
     it("is has an delete function", function() {
         expect(modelColor.delete).toEqual(jasmine.any(Function));
+    });
+    it("calls initialize function on instantiation", function() {
+        expect(this.initCallback).toHaveBeenCalled();
     });
     it("will save data in the model at instantiation", function() {
         modelColor = new Model({
@@ -154,6 +169,9 @@ describe("A Model", function() {
         let deleteReturns = modelColor.delete();
         expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
     });
+    it("can be extended", function() {
+        expect(modelColor.extendedFunction).toEqual(jasmine.any(Function));
+    });
 });
 
 describe("A Collection", function() {
@@ -166,6 +184,19 @@ describe("A Collection", function() {
     let modelColor3;
     let modelColors;
     beforeEach(function() {
+        let self = this;
+        this.callback = function(data) {};
+        this.initCallback = function(data) {};
+        spyOn(this, 'callback');
+        spyOn(this, 'initCallback');
+        const CollectionTest = class extends Collection {
+            initialize() {
+                self.initCallback();
+            }
+            extendedFunction() {
+
+            }
+        };
         modelColor1 = new Model({
             name: 'red'
         });
@@ -175,10 +206,11 @@ describe("A Collection", function() {
         modelColor3 = new Model({
             name: 'blue'
         });
-        modelColors = new Collection();
+        modelColors = new CollectionTest();
     });
     afterEach(function() {
         delete this.callback;
+        delete this.initCallback;
     });
     it("is an object", function() {
         expect(modelColors).toEqual(jasmine.any(Object));
@@ -203,6 +235,9 @@ describe("A Collection", function() {
     });
     it("is has an delete function", function() {
         expect(modelColors.delete).toEqual(jasmine.any(Function));
+    });
+    it("calls initialize function on instantiation", function() {
+        expect(this.initCallback).toHaveBeenCalled();
     });
     it("will save data in the collection at instantiation", function() {
         modelColors = new Collection([
@@ -490,5 +525,8 @@ describe("A Collection", function() {
         });
         modelColors.delete();
         expect(this.callback).toHaveBeenCalledWith(jasmine.any(Object));
+    });
+    it("can be extended", function() {
+        expect(modelColors.extendedFunction).toEqual(jasmine.any(Function));
     });
 });
