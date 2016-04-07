@@ -1,21 +1,19 @@
 (function (global, factory) {
     if (typeof define === "function" && define.amd) {
-        define(['module', 'events', 'util', 'lodash'], factory);
+        define(['module', 'events', 'lodash'], factory);
     } else if (typeof exports !== "undefined") {
-        factory(module, require('events'), require('util'), require('lodash'));
+        factory(module, require('events'), require('lodash'));
     } else {
         var mod = {
             exports: {}
         };
-        factory(mod, global.events, global.util, global.lodash);
+        factory(mod, global.events, global.lodash);
         global.index = mod.exports;
     }
-})(this, function (module, _events, _util, _lodash) {
+})(this, function (module, _events, _lodash) {
     'use strict';
 
     var _events2 = _interopRequireDefault(_events);
-
-    var _util2 = _interopRequireDefault(_util);
 
     var _lodash2 = _interopRequireDefault(_lodash);
 
@@ -25,7 +23,55 @@
         };
     }
 
-    (function (EventEmitter, util, _) {
+    function _classCallCheck(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+            throw new TypeError("Cannot call a class as a function");
+        }
+    }
+
+    var _createClass = function () {
+        function defineProperties(target, props) {
+            for (var i = 0; i < props.length; i++) {
+                var descriptor = props[i];
+                descriptor.enumerable = descriptor.enumerable || false;
+                descriptor.configurable = true;
+                if ("value" in descriptor) descriptor.writable = true;
+                Object.defineProperty(target, descriptor.key, descriptor);
+            }
+        }
+
+        return function (Constructor, protoProps, staticProps) {
+            if (protoProps) defineProperties(Constructor.prototype, protoProps);
+            if (staticProps) defineProperties(Constructor, staticProps);
+            return Constructor;
+        };
+    }();
+
+    function _possibleConstructorReturn(self, call) {
+        if (!self) {
+            throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+        }
+
+        return call && (typeof call === "object" || typeof call === "function") ? call : self;
+    }
+
+    function _inherits(subClass, superClass) {
+        if (typeof superClass !== "function" && superClass !== null) {
+            throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+        }
+
+        subClass.prototype = Object.create(superClass && superClass.prototype, {
+            constructor: {
+                value: subClass,
+                enumerable: false,
+                writable: true,
+                configurable: true
+            }
+        });
+        if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+    }
+
+    (function (EventEmitter, _) {
 
         'use strict';
 
@@ -33,175 +79,195 @@
         MODEL
         */
 
-        var Model = function Model(modelData) {
-            var _this = this;
+        var Model = function (_EventEmitter) {
+            _inherits(Model, _EventEmitter);
 
-            // this is called whenever the model is instantiated
-            this.initialize = function () {};
+            function Model(modelData) {
+                _classCallCheck(this, Model);
 
-            // the setter
-            this.set = function (data) {
-                if (data && _.isObject(data)) {
-                    _this.modelData = data;
-                    _this.emit('change', _this.get());
-                    _this.emit('set', _this.get());
-                    return true;
+                var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Model).call(this));
+
+                // where the data is held for the model
+                if (modelData && _.isObject(modelData)) {
+                    _this.set(modelData);
                 } else {
-                    return false;
+                    _this.set({});
                 }
-            };
 
-            // the getter
-            this.get = function () {
-                return _this.modelData;
-            };
+                _this.initialize();
 
-            // the updater
-            this.update = function (updateData) {
-
-                if (updateData && _.isObject(updateData)) {
-                    _this.set(_.extend(_this.get(), updateData));
-                    _this.emit('change', _this.get());
-                    _this.emit('update', _this.get());
-                    return true;
-                } else {
-                    return false;
-                }
-            };
-
-            // the deleter
-            this.delete = function () {
-                _this.set({});
-                _this.emit('change', _this.get());
-                _this.emit('delete', _this.get());
-                return true;
-            };
-
-            // where the data is held for the model
-            if (modelData && _.isObject(modelData)) {
-                this.set(modelData);
-            } else {
-                this.set({});
+                return _this;
             }
 
-            // run it on instantiation
-            this.initialize();
-        };
-
-        /*
-        COLLECTION
-        */
-
-        var Collection = function Collection(collectionData) {
-            var _this2 = this;
-
-            // this is called whenever the model is instantiated
-            this.initialize = function () {};
-
-            // the setter
-            this.set = function (data) {
-                if (_.isArray(data)) {
-                    _this2.collectionData = data;
-                    _this2.emit('change', _this2.get());
-                    _this2.emit('set', _this2.get());
-                    return true;
-                } else {
-                    return false;
+            _createClass(Model, [{
+                key: 'initialize',
+                value: function initialize() {
+                    return this;
                 }
-            };
-
-            // the pusher
-            this.push = function (data) {
-                if (data) {
-                    _this2.set(_.concat(_this2.get(), data));
-                    _this2.emit('change', _this2.get());
-                    _this2.emit('push', _this2.get());
-                    return true;
-                } else {
-                    return false;
-                }
-            };
-
-            // the getter
-            this.get = function (index) {
-                if (_.isNumber(index)) {
-                    return _this2.collectionData[index];
-                } else {
-                    return _this2.collectionData;
-                }
-            };
-
-            // the updater
-            this.update = function (index, updateData) {
-                // if updating an item in the array
-                if (_.isNumber(index) && _this2.get(index)) {
-                    // if we are updating a model
-                    if (_.isObject(updateData) && _this2.get(index).get && _.isObject(_this2.get(index).get())) {
-                        _this2.get(index).set(_.extend(_this2.get(index).get(), updateData));
-                        _this2.get(index).emit('change', _this2.get(index).get());
-                        _this2.get(index).emit('update', _this2.get(index).get());
-                        _this2.emit('change', _this2.get());
-                        _this2.emit('update', _this2.get());
+            }, {
+                key: 'set',
+                value: function set(data) {
+                    if (data && _.isObject(data)) {
+                        this.modelData = data;
+                        this.emit('change', this.get());
+                        this.emit('set', this.get());
                         return true;
-                        // if we are updating a standard object
-                    } else if (_.isObject(updateData) && _.isObject(_this2.get(index))) {
-                            _this2.collectionData[index] = _.extend(_this2.get(index), updateData);
-                            _this2.emit('change', _this2.get());
-                            _this2.emit('update', _this2.get());
-                            return true;
-                        } else if (updateData) {
-                            _this2.collectionData[index] = updateData;
-                            _this2.emit('change', _this2.get());
-                            _this2.emit('update', _this2.get());
-                            return true;
-                        } else {
-                            return false;
-                        }
-                } else if (_.isArray(index)) {
-                    _this2.set(index);
-                    _this2.emit('change', _this2.get());
-                    _this2.emit('update', _this2.get());
-                    return true;
-                } else {
-                    return false;
+                    } else {
+                        return false;
+                    }
                 }
-            };
+            }, {
+                key: 'get',
+                value: function get() {
+                    return this.modelData;
+                }
+            }, {
+                key: 'update',
+                value: function update(updateData) {
 
-            // the deleter
-            this.delete = function (index) {
-                if (_.isNumber(index) && _this2.get(index)) {
-                    _.pullAt(_this2.collectionData, index);
-                    _this2.emit('change', _this2.get());
-                    _this2.emit('delete', _this2.get());
+                    if (updateData && _.isObject(updateData)) {
+                        this.set(_.extend(this.get(), updateData));
+                        this.emit('change', this.get());
+                        this.emit('update', this.get());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }, {
+                key: 'delete',
+                value: function _delete() {
+                    this.set({});
+                    this.emit('change', this.get());
+                    this.emit('delete', this.get());
                     return true;
-                } else if (!index) {
+                }
+            }]);
+
+            return Model;
+        }(EventEmitter);
+
+        var Collection = function (_EventEmitter2) {
+            _inherits(Collection, _EventEmitter2);
+
+            function Collection(collectionData) {
+                _classCallCheck(this, Collection);
+
+                var _this2 = _possibleConstructorReturn(this, Object.getPrototypeOf(Collection).call(this));
+
+                // where the data is held for the collection
+                if (collectionData && _.isArray(collectionData)) {
+                    _this2.set(collectionData);
+                } else {
                     _this2.set([]);
-                    _this2.emit('change', _this2.get());
-                    _this2.emit('delete', _this2.get());
-                    return true;
-                } else {
-                    return false;
                 }
-            };
 
-            // where the data is held for the collection
-            if (collectionData && _.isArray(collectionData)) {
-                this.set(collectionData);
-            } else {
-                this.set([]);
+                _this2.initialize();
+
+                return _this2;
             }
 
-            // run it on instantiation
-            this.initialize();
-        };
+            _createClass(Collection, [{
+                key: 'initialize',
+                value: function initialize() {
 
-        // this sets up the events
-        util.inherits(Model, EventEmitter);
-        util.inherits(Collection, EventEmitter);
+                    return this;
+                }
+            }, {
+                key: 'set',
+                value: function set(data) {
+
+                    if (_.isArray(data)) {
+                        this.collectionData = data;
+                        this.emit('change', this.get());
+                        this.emit('set', this.get());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }, {
+                key: 'push',
+                value: function push(data) {
+                    if (data) {
+                        this.set(_.concat(this.get(), data));
+                        this.emit('change', this.get());
+                        this.emit('push', this.get());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }, {
+                key: 'get',
+                value: function get(index) {
+                    if (_.isNumber(index)) {
+                        return this.collectionData[index];
+                    } else {
+                        return this.collectionData;
+                    }
+                }
+            }, {
+                key: 'update',
+                value: function update(index, updateData) {
+                    // if updating an item in the array
+                    if (_.isNumber(index) && this.get(index)) {
+                        // if we are updating a model
+                        if (_.isObject(updateData) && this.get(index).get && _.isObject(this.get(index).get())) {
+                            this.get(index).set(_.extend(this.get(index).get(), updateData));
+                            this.get(index).emit('change', this.get(index).get());
+                            this.get(index).emit('update', this.get(index).get());
+                            this.emit('change', this.get());
+                            this.emit('update', this.get());
+                            return true;
+                            // if we are updating a standard object
+                        } else if (_.isObject(updateData) && _.isObject(this.get(index))) {
+                                this.collectionData[index] = _.extend(this.get(index), updateData);
+                                this.emit('change', this.get());
+                                this.emit('update', this.get());
+                                return true;
+                            } else if (updateData) {
+                                this.collectionData[index] = updateData;
+                                this.emit('change', this.get());
+                                this.emit('update', this.get());
+                                return true;
+                            } else {
+                                return false;
+                            }
+                    } else if (_.isArray(index)) {
+                        this.set(index);
+                        this.emit('change', this.get());
+                        this.emit('update', this.get());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }, {
+                key: 'delete',
+                value: function _delete(index) {
+                    if (_.isNumber(index) && this.get(index)) {
+                        _.pullAt(this.collectionData, index);
+                        this.emit('change', this.get());
+                        this.emit('delete', this.get());
+                        return true;
+                    } else if (!index) {
+                        this.set([]);
+                        this.emit('change', this.get());
+                        this.emit('delete', this.get());
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            }]);
+
+            return Collection;
+        }(EventEmitter);
 
         module.exports = {
             Model: Model,
             Collection: Collection
         };
-    })(_events2.default, _util2.default, _lodash2.default);
+    })(_events2.default, _lodash2.default);
 });

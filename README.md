@@ -2,7 +2,17 @@
 
 [![Build Status](https://travis-ci.org/bshack/trndyModel.svg?branch=master)](https://travis-ci.org/bshack/trndyModel) [![Coverage Status](https://coveralls.io/repos/github/bshack/trndyModel/badge.svg?branch=master)](https://coveralls.io/github/bshack/trndyModel?branch=master)
 
-A simple JS data model that emits events on data change. Offers support for collections of models.
+A simple ES6 JS data model that emits events on data change. Offers support for collections of models.
+
+Learn more about ES6 classes here:
+
+https://babeljs.io/docs/learn-es2015/
+
+Model and collection events are emited using Node.js' events module. For more options on how to listen to events please look at the Node.js documentation:
+
+https://nodejs.org/api/events.html
+
+## Install
 
 Install the node module:
 
@@ -47,10 +57,6 @@ modelColor.on('change', function(data) {
 ```
 
 Whenever a model changes it will emit a 'change' event.
-
-Model and collection events are emited using Node.js' events module. For more options on how to listen to events please look at the Node.js documentation:
-
-https://nodejs.org/api/events.html
 
 ### Set
 
@@ -165,10 +171,6 @@ modelColors.on('change', function(data) {
 ```
 
 Whenever these models or this collection change they will emit a 'change' event.
-
-Model and collection events are emited using Node.js' events module. For more options on how to listen to events please look at the Node.js documentation:
-
-https://nodejs.org/api/events.html
 
 ### Set
 

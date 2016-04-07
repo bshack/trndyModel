@@ -1,8 +1,7 @@
 import EventEmitter from 'events';
-import util from 'util';
 import _ from 'lodash';
 
-((EventEmitter, util, _) => {
+((EventEmitter, _) => {
 
     'use strict';
 
@@ -10,13 +9,28 @@ import _ from 'lodash';
     MODEL
     */
 
-    const Model = function(modelData) {
+    const Model = class extends EventEmitter {
 
-        // this is called whenever the model is instantiated
-        this.initialize = () => {};
+        constructor(modelData) {
+
+            super();
+            // where the data is held for the model
+            if (modelData && _.isObject(modelData)) {
+                this.set(modelData);
+            } else {
+                this.set({});
+            }
+
+            this.initialize();
+
+        }
+
+        initialize() {
+            return this;
+        }
 
         // the setter
-        this.set = data => {
+        set(data) {
             if (data && _.isObject(data)) {
                 this.modelData = data;
                 this.emit('change', this.get());
@@ -25,15 +39,15 @@ import _ from 'lodash';
             } else {
                 return false;
             }
-        };
+        }
 
         // the getter
-        this.get = () => {
+        get() {
             return this.modelData;
-        };
+        }
 
         // the updater
-        this.update = updateData => {
+        update(updateData) {
 
             if (updateData && _.isObject(updateData)) {
                 this.set(_.extend(this.get(), updateData));
@@ -44,39 +58,42 @@ import _ from 'lodash';
                 return false;
             }
 
-        };
+        }
 
         // the deleter
-        this.delete = () => {
+        delete() {
             this.set({});
             this.emit('change', this.get());
             this.emit('delete', this.get());
             return true;
         };
 
-        // where the data is held for the model
-        if (modelData && _.isObject(modelData)) {
-            this.set(modelData);
-        } else {
-            this.set({});
-        }
-
-        // run it on instantiation
-        this.initialize();
-
     };
 
-    /*
-    COLLECTION
-    */
+    const Collection = class extends EventEmitter {
 
-    const Collection = function(collectionData) {
+        constructor(collectionData) {
+            super();
+            // where the data is held for the collection
+            if (collectionData && _.isArray(collectionData)) {
+                this.set(collectionData);
+            } else {
+                this.set([]);
+            }
 
-        // this is called whenever the model is instantiated
-        this.initialize = () => {};
+            this.initialize();
+
+        }
+
+        initialize() {
+
+            return this;
+
+        }
 
         // the setter
-        this.set = data => {
+        set(data) {
+
             if (_.isArray(data)) {
                 this.collectionData = data;
                 this.emit('change', this.get());
@@ -85,10 +102,11 @@ import _ from 'lodash';
             } else {
                 return false;
             }
+
         };
 
         // the pusher
-        this.push = data => {
+        push(data) {
             if (data) {
                 this.set(_.concat(this.get(), data));
                 this.emit('change', this.get());
@@ -100,7 +118,7 @@ import _ from 'lodash';
         };
 
         // the getter
-        this.get = index => {
+        get(index) {
             if (_.isNumber(index)) {
                 return this.collectionData[index];
             } else {
@@ -109,7 +127,7 @@ import _ from 'lodash';
         };
 
         // the updater
-        this.update = (index, updateData) => {
+        update(index, updateData) {
             // if updating an item in the array
             if (_.isNumber(index) && this.get(index)) {
                 // if we are updating a model
@@ -146,7 +164,7 @@ import _ from 'lodash';
         };
 
         // the deleter
-        this.delete = index => {
+        delete(index) {
             if (_.isNumber(index) && this.get(index)) {
                 _.pullAt(this.collectionData, index);
                 this.emit('change', this.get());
@@ -162,25 +180,11 @@ import _ from 'lodash';
             }
         };
 
-        // where the data is held for the collection
-        if (collectionData && _.isArray(collectionData)) {
-            this.set(collectionData);
-        } else {
-            this.set([]);
-        }
-
-        // run it on instantiation
-        this.initialize();
-
     };
-
-    // this sets up the events
-    util.inherits(Model, EventEmitter);
-    util.inherits(Collection, EventEmitter);
 
     module.exports = {
         Model: Model,
         Collection: Collection
     };
 
-})(EventEmitter, util, _);
+})(EventEmitter, _);
