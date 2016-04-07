@@ -38,12 +38,28 @@ Create a new empty model:
 var modelColor = new Model();
 ```
 
-Optionally you can also set the model data at instantiation:
+optionally you can also set the model data at instantiation:
 
 ```
 var modelColor = new Model({
     name: 'red'
 });
+```
+
+## Extend
+
+extend the Model class for your own needs:
+
+```
+const MyModel = class extends Model {
+    someGreatFeature() {
+        console.log('this is great!');
+    }
+};
+
+const myModel = new MyModel();
+
+myModel.someGreatFeature();
 ```
 
 ### Events
@@ -142,6 +158,22 @@ var modelColors = new Collection([
     modelColor2,
     modelColor3
 ]);
+```
+
+## Extend
+
+extend the Collection class for your own needs:
+
+```
+const MyCollection = class extends Collection {
+    someGreatFeature() {
+        console.log('this is great!');
+    }
+};
+
+const myCollection = new MyCollection();
+
+myCollection.someGreatFeature();
 ```
 
 ### Events
