@@ -117,6 +117,20 @@ modelColor.delete();
 
 This will emit 'change' and 'delete' events.
 
+## Initialize
+
+At instantiation the initialize function will execute if defined:
+
+```
+const MyModel = class extends Model {
+    initialize() {
+        console.log('model has initialized');
+    }
+};
+
+const myModel = new MyModel();
+```
+
 ## Collection Usage
 
 Collections are arrays. They can hold models or any other data types.
@@ -312,3 +326,17 @@ modelColors.delete();
 ```
 
 This will emit 'change' and 'delete' events.
+
+## Initialize
+
+At instantiation the initialize function will execute if defined:
+
+```
+const MyCollection = class extends Collection {
+    initialize() {
+        console.log('collection has initialized');
+    }
+};
+
+const myCollection = new MyCollection();
+```
